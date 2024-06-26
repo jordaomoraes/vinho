@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Lote {
+  id                 Int        @id @default(autoincrement())
+  endMaquina         String?
+  modoOperacao       Int?
+  docReferencia      String
+  operador           String?    @default("Sem Informações")
+  pesoLoteProgramado Float
+  dataHoraInicioLote DateTime?
+  dataHoraFinalLote  DateTime?
+  pesoLote           Float?
+  pesoSaco           Float?
+  qtdSaco            Int?
+  idPlc              Int?
+  consumed           Boolean?   @default(false)
+  status             String     @default("Aguardando Processamento")
+  dataCadastro       DateTime   @default(now())
+  Batelada           Batelada[]
+
+  @@map("lotes")
+}
+
+model Batelada {
+  id           Int      @id @default(autoincrement())
+  lote         Lote     @relation(fields: [idLote], references: [id])
+  idLote       Int
+  dataBatelada DateTime
+  idPlc        Int
+  pesoBatelada Float
+
+  @@map("bateladas")
+}
+
+model LoteAtual {
+  id                Int    @id @default(autoincrement())
+  idLote            Int?
+  pesoLote          Float?
+  pesoAtual         Float?
+  producaoHoje      Float?
+  producaoTotal     Float?
+  modoOperacao      Int
+  statusEquipamento String @default("Parado")
+  docReferencia     String @default(" -- ")
+
+  @@map("loteAtual")
+}
+
+model User {
+  id                Int         @id @default(autoincrement())
+  name              String
+  username          String      @unique
+  email             String      @unique
+  password          String
+  dataCadastro      DateTime    @default(now())
+
+  @@map("user")
+
+}
