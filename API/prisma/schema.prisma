@@ -7,60 +7,89 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Lote {
-  id                 Int        @id @default(autoincrement())
-  endMaquina         String?
-  modoOperacao       Int?
-  docReferencia      String
-  operador           String?    @default("Sem Informações")
-  pesoLoteProgramado Float
-  dataHoraInicioLote DateTime?
-  dataHoraFinalLote  DateTime?
-  pesoLote           Float?
-  pesoSaco           Float?
-  qtdSaco            Int?
-  idPlc              Int?
-  consumed           Boolean?   @default(false)
-  status             String     @default("Aguardando Processamento")
-  dataCadastro       DateTime   @default(now())
-  Batelada           Batelada[]
+model Usuario {
+  id    BigInt   @id @default(autoincrement())
+  nome  String   @db.VarChar(100)
+  email String   @db.VarChar(100)
+  senha String   @db.VarChar(100)
+  tipo  Int?     @default(0)
 
-  @@map("lotes")
+  Area       Area[]
+  Cultura    Cultura[]
+  Plantacao  Plantacao[]
+  Sensor     Sensor[]
+  Leitura    Leitura[]
+
+  @@map("usuarios")
 }
 
-model Batelada {
-  id           Int      @id @default(autoincrement())
-  lote         Lote     @relation(fields: [idLote], references: [id])
-  idLote       Int
-  dataBatelada DateTime
-  idPlc        Int
-  pesoBatelada Float
+model Area {
+  id         BigInt    @id @default(autoincrement())
+  idUser     BigInt
+  tamanho    Decimal   @db.Decimal(18, 2) @default(0)
+  descricao  String    @db.VarChar(200)
+  latitude   String    @db.VarChar(50)
+  longitude  String    @db.VarChar(50)
 
-  @@map("bateladas")
+  usuario    Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  Plantacao  Plantacao[]
+  Sensor     Sensor[]
+
+  @@map("areas")
 }
 
-model LoteAtual {
-  id                Int    @id @default(autoincrement())
-  idLote            Int?
-  pesoLote          Float?
-  pesoAtual         Float?
-  producaoHoje      Float?
-  producaoTotal     Float?
-  modoOperacao      Int
-  statusEquipamento String @default("Parado")
-  docReferencia     String @default(" -- ")
+model Cultura {
+  id         BigInt    @id @default(autoincrement())
+  idUser     BigInt
+  descricao  String    @db.VarChar(200)
 
-  @@map("loteAtual")
+  usuario    Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  Plantacao  Plantacao[]
+
+  @@map("culturas")
 }
 
-model User {
-  id                Int         @id @default(autoincrement())
-  name              String
-  username          String      @unique
-  email             String      @unique
-  password          String
-  dataCadastro      DateTime    @default(now())
+model Plantacao {
+  id             BigInt    @id @default(autoincrement())
+  idUser         BigInt
+  idArea         BigInt?
+  idCultura      BigInt?
+  dataPlantacao  DateTime?
+  quantidade     Decimal   @db.Decimal(18, 2) @default(0)
 
-  @@map("user")
+  usuario        Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  area           Area?     @relation(fields: [idArea], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  cultura        Cultura?  @relation(fields: [idCultura], references: [id], onUpdate: NoAction, onDelete: NoAction)
 
+  @@map("plantacoes")
+}
+
+model Sensor {
+  id            BigInt    @id @default(autoincrement())
+  idUser        BigInt
+  idArea        BigInt?
+  latitude      String    @db.VarChar(50)
+  longitude     String    @db.VarChar(50)
+  descricao     String    @db.VarChar(50)
+  tipo          String    @db.VarChar(50)
+  dataInstalacao DateTime?
+
+  usuario       Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  area          Area?     @relation(fields: [idArea], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  Leitura       Leitura[]
+
+  @@map("sensores")
+}
+
+model Leitura {
+  id            BigInt    @id @default(autoincrement())
+  idUser        BigInt
+  idSensor      BigInt
+  umidadeMedida Decimal   @db.Decimal(18, 2) @default(0)
+  dataMedicao   DateTime  @default(now())
+
+  usuario       Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  sensor        Sensor    @relation(fields: [idSensor], references: [id], onUpdate: NoAction, onDelete: NoAction)
+
+  @@map("leituras")
 }
