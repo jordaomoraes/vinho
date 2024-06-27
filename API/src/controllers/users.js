@@ -63,7 +63,7 @@ router.post('/user/login', async (req, res) => {
   }
 
   // Se as credenciais estiverem corretas, crie um token JWT
-  const token = jwt.sign({ userId: user.id }, 'suaChaveSecreta', { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user.id }, 'apiChaveVinho', { expiresIn: '1h' });
 
   res.json({ token });
 });
