@@ -6,6 +6,10 @@ const jwt = require('jsonwebtoken');
 
 const router = Router();
 
+router.get ('/', async (req, res) => {
+  return res.json({ message: "Api vinho on line"});
+});
+
 //rota para adicionar novos usuários
 router.post('/user/adicionar', async (req, res) => {
   const registerBodySchema = z.object({
