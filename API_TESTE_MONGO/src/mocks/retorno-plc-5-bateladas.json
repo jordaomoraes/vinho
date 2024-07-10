@@ -1,0 +1,20 @@
+{
+  "value": {
+    "dataType": "Real",
+    "arrayType": "Array",
+    "value": [
+      10.00,
+      10.00,
+      10.00,
+      10.00,
+      10.00
+    ]
+  },
+  "statusCode": {
+    "value": 0
+  },
+  "sourceTimestamp": "2023-06-14T10:31:02.760Z",
+  "sourcePicoseconds": 698200000,
+  "serverTimestamp": "2023-06-14T10:31:02.760Z",
+  "serverPicoseconds": 698200000
+}

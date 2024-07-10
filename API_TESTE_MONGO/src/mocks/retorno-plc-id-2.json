@@ -1,0 +1,31 @@
+{
+  "value": {
+    "dataType": "String",
+    "arrayType": "Array",
+    "value": [
+      "Máquina 3",
+      "Lote C",
+      "Modo 3",
+      "Referência 3",
+      "Operador 3",
+      "30 kg",
+      "2023-06-13",
+      "08:00",
+      "2023-06-13",
+      "10:30",
+      "2023-06-13",
+      "10:00",
+      "8 kg",
+      "9.5 kg",
+      "1 kg",
+      "9"
+    ]
+  },
+  "statusCode": {
+    "value": 0
+  },
+  "sourceTimestamp": "2023-06-14T10:31:02.760Z",
+  "sourcePicoseconds": 698200000,
+  "serverTimestamp": "2023-06-14T10:31:02.760Z",
+  "serverPicoseconds": 698200000
+}
