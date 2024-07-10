@@ -3,93 +3,95 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
 model Usuario {
-  id    BigInt   @id @default(autoincrement())
-  nome  String   @db.VarChar(100)
-  email String   @db.VarChar(100)
-  senha String   @db.VarChar(100)
-  tipo  Int?     @default(0)
+  id       String    @id @default(cuid()) @map("_id")
+  nome     String
+  email    String
+  senha    String
+  tipo     Int?      @default(0)
 
-  Area       Area[]
-  Cultura    Cultura[]
-  Plantacao  Plantacao[]
-  Sensor     Sensor[]
-  Leitura    Leitura[]
+  areas    Area[]    // Relação um-para-muitos com áreas
+  culturas Cultura[] // Relação um-para-muitos com culturas
+  plantacoes Plantacao[] // Relação um-para-muitos com plantações
+  sensores Sensor[]   // Relação um-para-muitos com sensores
+  leituras Leitura[]  // Relação um-para-muitos com leituras
 
   @@map("usuarios")
 }
 
-model Area {
-  id         BigInt    @id @default(autoincrement())
-  idUser     BigInt
-  tamanho    Decimal   @db.Decimal(18, 2) @default(0)
-  descricao  String    @db.VarChar(200)
-  latitude   String    @db.VarChar(50)
-  longitude  String    @db.VarChar(50)
 
-  usuario    Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  Plantacao  Plantacao[]
-  Sensor     Sensor[]
+model Area {
+  id         String    @id @default(cuid()) @map("_id")
+  idUser     String
+  tamanho    Float     @default(0)
+  descricao  String
+  latitude   String
+  longitude  String
+
+  usuario    Usuario   @relation(fields: [idUser], references: [id])
+  plantacoes Plantacao[]
+  sensores   Sensor[]
 
   @@map("areas")
 }
 
 model Cultura {
-  id         BigInt    @id @default(autoincrement())
-  idUser     BigInt
-  descricao  String    @db.VarChar(200)
+  id         String    @id @default(cuid()) @map("_id")
+  idUser     String
+  descricao  String
 
-  usuario    Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  Plantacao  Plantacao[]
+  usuario    Usuario   @relation(fields: [idUser], references: [id])
+  plantacoes Plantacao[] // Relação um-para-muitos com plantações, usando `Type[]`
 
   @@map("culturas")
 }
 
 model Plantacao {
-  id             BigInt    @id @default(autoincrement())
-  idUser         BigInt
-  idArea         BigInt?
-  idCultura      BigInt?
+  id             String    @id @default(cuid()) @map("_id")
+  idUser         String
+  idArea         String?
+  idCultura      String?
   dataPlantacao  DateTime?
-  quantidade     Decimal   @db.Decimal(18, 2) @default(0)
+  quantidade     Float     @default(0)
 
-  usuario        Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  area           Area?     @relation(fields: [idArea], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  cultura        Cultura?  @relation(fields: [idCultura], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  usuario        Usuario   @relation(fields: [idUser], references: [id])
+  area           Area?     @relation(fields: [idArea], references: [id])
+  cultura        Cultura?  @relation(fields: [idCultura], references: [id])
 
   @@map("plantacoes")
 }
 
+
 model Sensor {
-  id            BigInt    @id @default(autoincrement())
-  idUser        BigInt
-  idArea        BigInt?
-  latitude      String    @db.VarChar(50)
-  longitude     String    @db.VarChar(50)
-  descricao     String    @db.VarChar(50)
-  tipo          String    @db.VarChar(50)
+  id            String    @id @default(cuid()) @map("_id")
+  idUser        String
+  idArea        String?
+  latitude      String
+  longitude     String
+  descricao     String
+  tipo          String
   dataInstalacao DateTime?
 
-  usuario       Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  area          Area?     @relation(fields: [idArea], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  Leitura       Leitura[]
+  usuario       Usuario   @relation(fields: [idUser], references: [id])
+  area          Area?     @relation(fields: [idArea], references: [id])
+  leituras      Leitura[] // Relação um-para-muitos com leituras, usando `Type[]`
 
   @@map("sensores")
 }
 
+
 model Leitura {
-  id            BigInt    @id @default(autoincrement())
-  idUser        BigInt
-  idSensor      BigInt
-  umidadeMedida Decimal   @db.Decimal(18, 2) @default(0)
+  id            String    @id @default(cuid()) @map("_id")
+  idUser        String
+  idSensor      String
+  umidadeMedida Float     @default(0)
   dataMedicao   DateTime  @default(now())
 
-  usuario       Usuario   @relation(fields: [idUser], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  sensor        Sensor    @relation(fields: [idSensor], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  usuario       Usuario   @relation(fields: [idUser], references: [id])
+  sensor        Sensor    @relation(fields: [idSensor], references: [id])
 
   @@map("leituras")
 }

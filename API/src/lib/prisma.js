@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const retry = require('retry');
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 const prisma = new PrismaClient({
@@ -12,12 +13,14 @@ async function connectWithRetry() {
     minTimeout: 2000,      // Tempo mínimo de espera entre tentativas (em milissegundos)
     maxTimeout: 30000,     // Tempo máximo de espera entre tentativas (em milissegundos)
   });
+  const uri = "mongodb+srv://jordao:jordao123@cluster0.kifw479.mongodb.net/DbTest?retryWrites=true&w=majority&appName=Cluster0";
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
   return new Promise((resolve, reject) => {
     operation.attempt(async (currentAttempt) => {
       console.log(`Iniciando conexão com o banco de dados. Tentativa ${currentAttempt}.`);
       try {
-        await prisma.$connect();
+        await client.connect();
         console.log("Conexão com o banco de dados estabelecida com sucesso.");
         console.log();
         resolve();

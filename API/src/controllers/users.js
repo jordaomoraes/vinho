@@ -4,6 +4,7 @@ const prisma = require('../lib/prisma');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+
 const router = Router();
 
 router.get ('/', async (req, res) => {
@@ -12,26 +13,25 @@ router.get ('/', async (req, res) => {
 
 //rota para adicionar novos usuários
 router.post('/user/adicionar', async (req, res) => {
+
   const registerBodySchema = z.object({
-    username: z.string(),
-    name: z.string(),
+    nome: z.string(),
     email: z.string(),
-    password: z.string(),
+    senha: z.string(),
   });
 
-  const { username, name, email, password } = registerBodySchema.parse(req.body);
+  const { nome, email, senha } = registerBodySchema.parse(req.body);
 
   try {
     // Gerar um hash seguro da senha
     const saltRounds = 10; // Número de salt rounds para o bcrypt (aumente para maior segurança)
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(senha, saltRounds);
 
-    await prisma.user.create({
+    await prisma.usuario.create ({
       data: {
-        username,
-        name,
+        nome,
         email,
-        password: hashedPassword, // Salvar o hash da senha no banco de dados
+        senha: hashedPassword, // Salvar o hash da senha no banco de dados
       },
     });
 
