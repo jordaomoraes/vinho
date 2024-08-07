@@ -3,28 +3,28 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model Usuario {
-  id       String    @id @default(cuid()) @map("_id")
-  nome     String
-  email    String
-  senha    String
-  tipo     Int?      @default(0)
 
-  areas    Area[]    // Relação um-para-muitos com áreas
-  culturas Cultura[] // Relação um-para-muitos com culturas
-  plantacoes Plantacao[] // Relação um-para-muitos com plantações
-  sensores Sensor[]   // Relação um-para-muitos com sensores
-  leituras Leitura[]  // Relação um-para-muitos com leituras
+model Usuario {
+  id       String    @id @default(cuid())
+  nome     String
+  email    String   @unique
+  senha    String
+  tipo     Int?     @default(0)
+
+  areas    Area[]
+  culturas Cultura[]
+  plantacoes Plantacao[]
+  sensores Sensor[]
+  leituras Leitura[]
 
   @@map("usuarios")
 }
 
-
 model Area {
-  id         String    @id @default(cuid()) @map("_id")
+  id         String    @id @default(cuid())
   idUser     String
   tamanho    Float     @default(0)
   descricao  String
@@ -39,18 +39,18 @@ model Area {
 }
 
 model Cultura {
-  id         String    @id @default(cuid()) @map("_id")
+  id         String    @id @default(cuid())
   idUser     String
   descricao  String
 
   usuario    Usuario   @relation(fields: [idUser], references: [id])
-  plantacoes Plantacao[] // Relação um-para-muitos com plantações, usando `Type[]`
+  plantacoes Plantacao[]
 
   @@map("culturas")
 }
 
 model Plantacao {
-  id             String    @id @default(cuid()) @map("_id")
+  id             String    @id @default(cuid())
   idUser         String
   idArea         String?
   idCultura      String?
@@ -64,9 +64,8 @@ model Plantacao {
   @@map("plantacoes")
 }
 
-
 model Sensor {
-  id            String    @id @default(cuid()) @map("_id")
+  id            String    @id @default(cuid())
   idUser        String
   idArea        String?
   latitude      String
@@ -77,14 +76,13 @@ model Sensor {
 
   usuario       Usuario   @relation(fields: [idUser], references: [id])
   area          Area?     @relation(fields: [idArea], references: [id])
-  leituras      Leitura[] // Relação um-para-muitos com leituras, usando `Type[]`
+  leituras      Leitura[]
 
   @@map("sensores")
 }
 
-
 model Leitura {
-  id            String    @id @default(cuid()) @map("_id")
+  id            String    @id @default(cuid())
   idUser        String
   idSensor      String
   umidadeMedida Float     @default(0)
