@@ -12,7 +12,7 @@ router.get ('/', async (req, res) => {
 });
 
 //rota para adicionar novos usuários
-router.post('/user/adicionar', async (req, res) => {
+router.post('/user/add', async (req, res) => {
 
   const registerBodySchema = z.object({
     nome: z.string(),
