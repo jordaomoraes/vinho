@@ -1,14 +1,5 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 model Usuario {
-  id       String    @id @default(cuid())
+  id       Int       @id @default(autoincrement())
   nome     String
   email    String   @unique
   senha    String
@@ -24,8 +15,8 @@ model Usuario {
 }
 
 model Area {
-  id         String    @id @default(cuid())
-  idUser     String
+  id         Int       @id @default(autoincrement())
+  idUser     Int
   tamanho    Float     @default(0)
   descricao  String
   latitude   String
@@ -39,8 +30,8 @@ model Area {
 }
 
 model Cultura {
-  id         String    @id @default(cuid())
-  idUser     String
+  id         Int       @id @default(autoincrement())
+  idUser     Int
   descricao  String
 
   usuario    Usuario   @relation(fields: [idUser], references: [id])
@@ -50,10 +41,10 @@ model Cultura {
 }
 
 model Plantacao {
-  id             String    @id @default(cuid())
-  idUser         String
-  idArea         String?
-  idCultura      String?
+  id             Int       @id @default(autoincrement())
+  idUser         Int
+  idArea         Int?
+  idCultura      Int?
   dataPlantacao  DateTime?
   quantidade     Float     @default(0)
 
@@ -65,9 +56,9 @@ model Plantacao {
 }
 
 model Sensor {
-  id            String    @id @default(cuid())
-  idUser        String
-  idArea        String?
+  id            Int       @id @default(autoincrement())
+  idUser        Int
+  idArea        Int?
   latitude      String
   longitude     String
   descricao     String
@@ -82,9 +73,9 @@ model Sensor {
 }
 
 model Leitura {
-  id            String    @id @default(cuid())
-  idUser        String
-  idSensor      String
+  id            Int       @id @default(autoincrement())
+  idUser        Int
+  idSensor      Int
   umidadeMedida Float     @default(0)
   dataMedicao   DateTime  @default(now())
 
