@@ -4,7 +4,10 @@ import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import clientesRouter from "./routes/clientes.js";
 import usersRouter from "./routes/users.js";
-import medicoesRouter from "./routes/medicoes.js";
+import areasRoutes from "./routes/areas.js";
+import leiturasRouter from "./routes/leituras.js";
+import sensoresRoutes from "./routes/sensores.js";
+
 
 dotenv.config();
 
@@ -30,7 +33,9 @@ app.use((req, res, next) => {
 // Rotas
 app.use("/clientes", clientesRouter);
 app.use("/users", usersRouter);
-app.use("/medicoes", medicoesRouter);
+app.use("/areas", areasRoutes);
+app.use("/sensores", sensoresRoutes);
+app.use("/leituras", leiturasRouter);
 
 // Rota raiz de teste
 app.get("/", async (req, res) => {
