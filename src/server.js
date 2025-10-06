@@ -1,16 +1,28 @@
-const express = require("express");
+import express from "express";
+import dotenv from "dotenv";
+import { createClient } from "@supabase/supabase-js";
+import clientesRouter from "./routes/clientes.js";
+import usersRouter from "./routes/users.js";
+import medicoesRouter from "./routes/medicoes.js";
+
+dotenv.config();
+
 const app = express();
-const cors = require('cors');
-const port = process.env.PORT || 3000;
-const rotasUsuarios = require('../src/controllers/users');
-const rotasMedicoes = require('../src/controllers/medicoes');
-
-
 app.use(express.json());
-app.use(cors());
-app.use(rotasUsuarios);
-app.use(rotasMedicoes);
 
-app.listen(port, () => {
-  console.log(`Servidor em execução na porta ${port}`);
+// Conexão com Supabase
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+// Disponibiliza o client Supabase em todas as rotas
+app.use((req, res, next) => {
+  req.supabase = supabase;
+  next();
 });
+
+// Rotas
+app.use("/clientes", clientesRouter);
+app.use("/users", usersRouter);
+app.use("/medicoes", medicoesRouter);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✅ API rodando em http://localhost:${PORT}`));
