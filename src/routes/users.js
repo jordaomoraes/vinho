@@ -16,13 +16,13 @@ router.get("/", async (req, res) => {
 // POST /users/add
 router.post("/add", async (req, res) => {
   try {
-    const { nome, email } = req.body;
-    if (!nome || !email) return res.status(400).json({ error: "nome e email são obrigatórios" });
+    const { nome, email, senha } = req.body;
+    if (!nome || !email || !senha) return res.status(400).json({ error: "nome e email são obrigatórios" });
 
-    const { data, error } = await req.supabase.from("usuarios").insert([{ nome, email }]);
+    const { data, error } = await req.supabase.from("usuarios").insert([{ nome, email, senha }]);
     if (error) throw error;
 
-    res.status(201).json({ message: "Usuário adicionado", user: data[0] });
+    res.status(201).json({ message: "Usuário adicionado" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erro ao adicionar usuário" });
