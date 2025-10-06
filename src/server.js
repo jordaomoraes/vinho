@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-const cors = require('cors');
+
 import { createClient } from "@supabase/supabase-js";
 import clientesRouter from "./routes/clientes.js";
 import usersRouter from "./routes/users.js";
@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
 
 // Verifica se variáveis de ambiente estão definidas
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
