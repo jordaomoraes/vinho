@@ -44,6 +44,11 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.post("/teste", (req, res) => {
+  res.json({ message: "POST funcionou!" });
+});
+
+
 // Porta correta para Railway
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ API rodando na porta ${PORT}`));
