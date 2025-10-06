@@ -48,6 +48,11 @@ app.post("/teste", (req, res) => {
   res.json({ message: "POST funcionou!" });
 });
 
+app.post("/ping", (req, res) => {
+  console.log("POST /ping chegou!", req.body);
+  res.json({ ok: true });
+});
+
 
 // Porta correta para Railway
 const PORT = process.env.PORT || 3000;
